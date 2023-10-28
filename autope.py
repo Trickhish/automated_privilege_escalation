@@ -24,7 +24,7 @@ avlc=[]
 loccmp=[]
 
 success_time=5
-lexf_url = ""
+lexf_url = "https://raw.githubusercontent.com/Trickhish/automated_privilege_escalation/main/lexf.sh"
 
 def lgic(lg):
     ic = lgics[lg] if lg in lgics else ""
