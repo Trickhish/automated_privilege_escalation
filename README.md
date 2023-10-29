@@ -65,3 +65,12 @@ Found 8 exploits
       Running Shell
 
 ```
+
+## Languages support :
+- C
+- Python
+- Go
+
+## To do :
+- Add support for Perl
+- Enhance script execution
