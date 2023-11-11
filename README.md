@@ -16,6 +16,12 @@ examples:
 
 ## Run example
 
+
+
+https://github.com/Trickhish/automated_privilege_escalation/assets/35201179/86d508c2-99e2-455e-aea3-e1167c3b6f6f
+
+
+
 `python3 autope.py jessie@10.10.184.12 --pwd PaSsWoRd`
 
 ```
