@@ -130,21 +130,32 @@ def exec(ssh, cmd):
     return([stdout.read().decode(), stdout.channel.recv_exit_status()])
 
 def findcve(ssh):
-    if (os.path.isfile("/tmp/lexf.sh")):
-        pth="/tmp/lexf.sh"
-    elif (os.path.isfile("lexf.sh")):
-        pth="lexf.sh"
-    else:
-        with open("lexf.sh", 'wb') as f:
-            f.write(rq.get(lexf_url).content)
-        pth="lexf.sh"
-    send(ssh, pth, "/tmp/script.sh")
-    r = exec(ssh, 'bash /tmp/script.sh')[0]
-    r = r.split("Possible Exploits:")[1]
-    r = r.split("\n")[2:-1]
-    r = ["CVE"+e.split("[CVE")[1].split("]")[0] for e in r]
-    return(r)
-
+    try:
+        if (os.path.isfile("/tmp/lexf.sh")):
+            pth="/tmp/lexf.sh"
+        elif (os.path.isfile("lexf.sh")):
+            pth="lexf.sh"
+        else:
+            with open("lexf.sh", 'wb') as f:
+                f.write(rq.get(lexf_url).content)
+                pth="lexf.sh"
+        try:
+            send(ssh, pth, "/tmp/script.sh")
+            r = exec(ssh, 'bash /tmp/script.sh')[0]
+        except:
+            send(ssh, pth, "script.sh")
+            r = exec(ssh, "bash script.sh")[0]
+        r = r.split("Possible Exploits:")[1]
+        r = r.split("\n")[2:-1]
+        r = ["CVE"+e.split("[CVE")[1].split("]")[0] for e in r]
+        return(r)
+    except KeyboardInterrupt:
+        print("Quitting")
+        exit()
+    except Exception as e:
+        print("Error:",str(e))
+        return([])
+    
 def checkcmd(ssh, cmd):
     r = exec(ssh, '[ -x "$(command -v '+cmd+')" ] && echo "true" || echo "false"')[0]
     return(r.strip() == "true")
