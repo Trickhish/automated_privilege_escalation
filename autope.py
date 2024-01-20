@@ -276,11 +276,17 @@ if __name__ == '__main__':
     
         [user, host] = args.user_host.split("@")
         print("Connecting to "+str(user)+"@"+str(host)+" with "+("password" if args.pwd else "private key")+"\n")
+
+        port=22
+        if (":" in host):
+            [host, port] = host.split(":")
+            port=int(port)
+            
         if (args.pvk):
             private_key = paramiko.RSAKey.from_private_key_file(args.pvk)
-            ssh.connect(host, username=user, pkey=private_key)
+            ssh.connect(host, username=user, pkey=private_key, port=port)
         else:
-            ssh.connect(host, username=user, password=args.pwd)
+            ssh.connect(host, username=user, password=args.pwd, port=port)
 
         print("Checking local C support ", end="")
         #loccmp
